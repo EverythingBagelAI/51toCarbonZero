@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>51toCarbonZero Sustainability ROI Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:#08182F;
+      --navy-dark:#061223;
+      --navy-deep:#0A1A33;
+      --navy-soft:#10253E;
+      --aqua:#11DAC7;
+      --aqua-soft:#6EF3E3;
+      --white:#FFFFFF;
+      --soft-gray:#D7DEE9;
+      --faint-gray:#F5F7FB;
+      --warm:#F9A23B;
+      --rose:#F76C6C;
+      --shadow:0 20px 45px rgba(4,15,30,0.15);
+      --card-shadow:0 12px 30px rgba(8,24,47,0.12);
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      font-family:'Inter',sans-serif;
+      color:var(--navy);
+      background:var(--faint-gray);
+      font-size:1rem;
+      line-height:1.65;
+      -webkit-font-smoothing:antialiased;
+    }
+    img { max-width:100%; display:block; }
+    a { color:var(--aqua); text-decoration:none; }
+    p { margin:0 0 1rem; }
+    .container { width:min(1260px,92vw); margin:0 auto; padding:0 1.5rem; }
+    header.header { position:sticky; top:0; z-index:80; background:linear-gradient(135deg,#061223,#0A1A33); border-bottom:1px solid rgba(17,218,199,0.25); box-shadow:0 15px 35px rgba(0,0,0,0.35); }
+    header .header-inner { display:flex; justify-content:center; align-items:center; padding:1.6rem 0; }
+    header .header-inner img { height:54px; filter:drop-shadow(0 12px 30px rgba(17,218,199,0.5)); }
+    header .accent-bar { height:4px; background:var(--aqua); box-shadow:0 0 16px rgba(17,218,199,0.6); }
+    .loading-screen { position:fixed; inset:0; background:var(--navy-dark); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; animation:fadeIn 0.6s ease forwards; }
+    .loading-ring { width:160px; height:160px; border-radius:50%; border:3px solid rgba(17,218,199,0.3); animation:pulseRing 2.6s infinite; position:relative; }
+    .loading-ring::before { content:""; position:absolute; inset:18px; border-radius:50%; border:3px solid rgba(17,218,199,0.3); animation:pulseRing 2.6s infinite 0.4s; }
+    .loading-logo { width:180px; filter:drop-shadow(0 0 30px rgba(17,218,199,0.7)); animation:logoGlow 3s ease-in-out infinite; margin-top:1.5rem; }
+    .synergy-loader { display:flex; gap:0.6rem; margin-top:0.75rem; }
+    .synergy-loader span { width:12px; height:12px; border-radius:50%; background:var(--aqua); animation:synergy 1.2s infinite ease-in-out; }
+    .synergy-loader span:nth-child(2){ animation-delay:0.15s; }
+    .synergy-loader span:nth-child(3){ animation-delay:0.3s; }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes pulseRing { 0% { transform:scale(0.85); opacity:0.8; } 70% { transform:scale(1.1); opacity:0.15; } 100% { transform:scale(1.2); opacity:0; } }
+    @keyframes logoGlow { 0%,100% { filter:drop-shadow(0 0 10px rgba(17,218,199,0.25)); } 50% { filter:drop-shadow(0 0 35px rgba(17,218,199,0.9)); } }
+    @keyframes synergy { 0%,80%,100% { transform:scale(0); opacity:0.4; } 40% { transform:scale(1); opacity:1; } }
+    .hero { position:relative; padding:110px 0 140px; background:linear-gradient(145deg,#061223,#09203F,#0F2E4C); color:var(--white); overflow:hidden; }
+    .hero-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:2.75rem; align-items:center; }
+    .hero h1 { font-size:clamp(3rem,4vw,4.6rem); margin-bottom:1rem; line-height:1.15; }
+    .hero p { color:rgba(215,222,233,0.9); font-size:1.1rem; }
+    .cta-group { display:flex; gap:1.3rem; flex-wrap:wrap; margin-top:2.2rem; }
+    .btn { padding:0.9rem 2.4rem; border-radius:999px; border:1px solid rgba(255,255,255,0.3); font-weight:600; backdrop-filter:blur(10px); transition:all 0.2s ease; }
+    .btn-primary { background:var(--aqua); color:var(--navy); box-shadow:0 18px 40px rgba(17,218,199,0.4); border:none; }
+    .btn-secondary { color:var(--white); }
+    .btn:hover { transform:translateY(-2px); }
+    .hero-visual { position:relative; min-height:360px; display:flex; align-items:center; justify-content:center; }
+    .wind-field { position:absolute; inset:auto 0 0 0; width:320px; height:320px; opacity:0.25; }
+    .wind-turbine { transform-origin:50% 80%; animation:turbineSpin 14s linear infinite; }
+    @keyframes turbineSpin { from { transform:rotate(0); } to { transform:rotate(360deg); } }
+    .rolling-hills { position:absolute; inset:auto 0 0 0; height:240px; overflow:hidden; }
+    .hill-layer { position:absolute; width:160%; height:100%; bottom:0; }
+    .hill-layer svg { width:100%; height:100%; }
+    .hill1 { opacity:0.55; animation:hillShift 40s linear infinite; }
+    .hill2 { opacity:0.35; animation:hillShift 55s linear infinite reverse; }
+    .hill3 { opacity:0.18; animation:hillShift 80s linear infinite; }
+    @keyframes hillShift { from { transform:translateX(0); } to { transform:translateX(-10%); } }
+    .particles,.leaf-field { position:absolute; inset:0; pointer-events:none; }
+    .particle { position:absolute; width:12px; height:12px; border-radius:50%; background:rgba(17,218,199,0.35); animation:drift 24s linear infinite, float 6s ease-in-out infinite; }
+    .leaf { position:absolute; width:24px; height:14px; border-radius:50%; background:rgba(17,218,199,0.3); animation:leafDrift 28s linear infinite; }
+    @keyframes drift { from { transform:translateX(-10vw); } to { transform:translateX(110vw); } }
+    @keyframes float { 0%,100% { margin-top:0; } 50% { margin-top:-18px; } }
+    @keyframes leafDrift { 0% { transform:translate(-10vw,0) rotate(-8deg); } 50% { transform:translate(40vw,-20px) rotate(10deg); } 100% { transform:translate(110vw,10px) rotate(-6deg); } }
+    .section { padding:120px 0; position:relative; }
+    .section.theme-dark { background:var(--navy-dark); color:var(--soft-gray); }
+    .section.theme-soft { background:var(--white); }
+    .section.theme-gradient { background:linear-gradient(145deg,#07142A,#0E2746); color:var(--soft-gray); }
+    .section h2 { font-size:2.8rem; margin:0 0 0.5rem; color:inherit; }
+    .section.theme-dark h2, .section.theme-gradient h2 { color:var(--white); }
+    .section-subtitle { color:#526a87; max-width:760px; margin-bottom:2rem; }
+    .section.theme-dark .section-subtitle, .section.theme-gradient .section-subtitle { color:rgba(215,222,233,0.9); }
+    .badge { display:inline-flex; align-items:center; justify-content:center; padding:0.45rem 1rem; border-radius:999px; border:1px solid rgba(17,218,199,0.3); color:var(--aqua); letter-spacing:0.1em; font-size:0.8rem; margin-bottom:1rem; }
+    .card { background:linear-gradient(135deg,#ffffff,#f9fbff); border-radius:24px; box-shadow:var(--card-shadow); border:1px solid rgba(8,24,47,0.08); padding:28px; transition:transform 0.25s ease, box-shadow 0.25s ease; }
+    .card:hover { transform:translateY(-4px); box-shadow:0 22px 44px rgba(0,0,0,0.18); }
+    .section.theme-dark .card, .section.theme-gradient .card { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); color:var(--soft-gray); }
+    .highlight { color:var(--aqua); font-weight:600; }
+    .metric-label { text-transform:uppercase; letter-spacing:0.08em; font-size:0.78rem; color:rgba(8,24,47,0.65); margin:0 0 0.35rem; }
+    .metric-value { font-size:1.85rem; font-weight:600; margin:0 0 0.4rem; color:var(--navy); }
+    .metric-description { margin:0; color:#4c5f78; line-height:1.5; }
+    .section.theme-dark .metric-label, .section.theme-dark .metric-description,
+    .section.theme-gradient .metric-label, .section.theme-gradient .metric-description { color:rgba(215,222,233,0.85); }
+    .section.theme-dark .metric-value, .section.theme-gradient .metric-value { color:var(--white); }
+    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1.5rem; }
+    .split { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:2rem; align-items:start; }
+    .contrast-layout { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; }
+    .contrast-card { border-radius:22px; padding:34px; color:var(--navy); box-shadow:var(--card-shadow); }
+    .contrast-card ul { list-style:none; margin:0; padding:0; }
+    .contrast-card li { display:flex; align-items:flex-start; gap:0.5rem; margin-bottom:0.6rem; }
+    .icon-list { list-style:none; margin:0; padding:0; }
+    .icon-list li { position:relative; padding-left:1.2rem; margin-bottom:0.55rem; }
+    .icon-list li::before { content:""; width:0.45rem; height:0.45rem; border-radius:50%; background:var(--aqua); position:absolute; left:0; top:0.65rem; }
+    .contrast-card li:last-child { margin-bottom:0; }
+    .icon-dot { width:10px; height:10px; border-radius:50%; margin-top:0.5rem; flex-shrink:0; }
+    .without-card { background:linear-gradient(145deg,rgba(247,108,108,0.15),rgba(249,162,59,0.15)); border:1px solid rgba(247,108,108,0.3); }
+    .with-card { background:linear-gradient(145deg,rgba(17,218,199,0.15),rgba(8,24,47,0.05)); border:1px solid rgba(17,218,199,0.3); }
+    .tab-wrapper { background:var(--white); border-radius:26px; padding:32px; box-shadow:var(--card-shadow); border:1px solid rgba(8,24,47,0.08); }
+    .tab-buttons { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.8rem; }
+    .tab-button { padding:0.65rem 1.8rem; border-radius:999px; border:1px solid rgba(8,24,47,0.15); background:transparent; color:var(--navy); font-weight:600; cursor:pointer; transition:all 0.2s ease; }
+    .tab-button.active { background:var(--aqua); color:var(--navy); border-color:transparent; box-shadow:0 12px 30px rgba(17,218,199,0.35); }
+    .tab-panel { display:none; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.4rem; }
+    .tab-panel.active { display:grid; }
+
+    .intro-card { background:linear-gradient(135deg,#0b1f34,#0c3f46); color:var(--soft-gray); border:1px solid rgba(255,255,255,0.15); }
+    .intro-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+    .intro-box { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:16px; padding:1rem 1.2rem; text-align:left; }
+    .intro-box label { display:block; font-size:0.75rem; letter-spacing:0.08em; text-transform:uppercase; color:rgba(255,255,255,0.7); margin-bottom:0.3rem; }
+    .intro-box span { font-size:1.1rem; font-weight:600; color:var(--white); }
+    .case-card .metric-value { font-size:1.35rem; }
+    .case-card .metric-description { margin:0 0 0.8rem; color:rgba(255,255,255,0.7); }
+    .timeline { position:relative; margin-top:2rem; padding-left:0; }
+    .timeline::before { content:""; position:absolute; left:50%; top:0; bottom:0; width:3px; background:rgba(17,218,199,0.4); transform:translateX(-50%); }
+    .timeline::after { content:""; display:block; clear:both; }
+    .timeline-card { width:48%; background:var(--white); border-radius:20px; padding:24px; box-shadow:var(--card-shadow); border:1px solid rgba(8,24,47,0.12); position:relative; margin-bottom:2.4rem; }
+    .timeline-card:nth-child(odd) { float:left; clear:both; }
+    .timeline-card:nth-child(even) { float:right; clear:both; }
+    .timeline-card::before { content:""; position:absolute; top:28px; width:14px; height:14px; border-radius:50%; background:var(--aqua); }
+    .timeline-card:nth-child(odd)::before { right:-7px; }
+    .timeline-card:nth-child(even)::before { left:-7px; }
+    .timeline-icon { width:32px; height:32px; border-radius:10px; background:rgba(17,218,199,0.15); display:flex; align-items:center; justify-content:center; margin-bottom:0.8rem; }
+    .section.theme-gradient .timeline-card { background:var(--white); color:var(--navy); }
+    .case-section { background:linear-gradient(145deg,#071427,#0F2E4C); color:var(--soft-gray); }
+    .case-carousel { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:2rem; }
+    .case-card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); padding:26px; border-radius:20px; box-shadow:0 20px 40px rgba(0,0,0,0.45); text-align:left; transition:transform 0.25s ease, box-shadow 0.25s ease; }
+    .case-card:hover { transform:translateY(-4px); box-shadow:0 25px 45px rgba(0,0,0,0.5); }
+    .case-card h3 { margin:0 0 0.5rem; color:var(--white); }
+    .case-card .metric-label { color:rgba(255,255,255,0.6); }
+    .case-card .metric-value { font-size:1.6rem; color:var(--aqua-soft); margin:0; }
+    .case-card .quote { font-style:italic; margin:1rem 0 0; color:rgba(255,255,255,0.75); }
+    .testimonial-section { background:var(--navy-dark); color:var(--soft-gray); }
+    .testimonial-carousel { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.4rem; }
+    .testimonial-card { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:26px; box-shadow:0 18px 40px rgba(0,0,0,0.4); position:relative; transition:transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; }
+    .testimonial-card:hover { transform:translateY(-4px); box-shadow:0 25px 50px rgba(0,0,0,0.5); border-top:3px solid var(--aqua); }
+    .testimonial-section .testimonial-carousel { gap:2.5rem; }
+    .section-divider { height:90px; background:url('data:image/svg+xml,%3Csvg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath fill="%2308182F" fill-opacity="0.05" d="M0,32L48,48C96,64,192,96,288,96C384,96,480,64,576,53.3C672,43,768,53,864,69.3C960,85,1056,107,1152,106.7C1248,107,1344,85,1392,74.7L1440,64V0H0Z"/%3E%3C/svg%3E'); background-size:cover; }
+    .section-divider.dark { background:url('data:image/svg+xml,%3Csvg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath fill="%23061223" d="M0,64L48,58.7C96,53,192,43,288,42.7C384,43,480,53,576,53.3C672,53,768,43,864,32C960,21,1056,11,1152,21.3C1248,32,1344,64,1392,80L1440,96V0H0Z"/%3E%3C/svg%3E'); }
+    table { width:100%; border-collapse:separate; border-spacing:0; border-radius:18px; overflow:hidden; box-shadow:var(--card-shadow); margin-top:1.5rem; }
+    thead { background:var(--navy-soft); color:var(--white); }
+    th, td { padding:1rem 1.2rem; border-bottom:1px solid rgba(8,24,47,0.08); text-align:left; }
+    tbody tr:nth-child(even) { background:rgba(8,24,47,0.02); }
+    footer { background:var(--navy); color:var(--soft-gray); text-align:center; padding:60px 0; }
+    footer img { height:50px; margin:0 auto 1rem; }
+    footer .socials { display:flex; gap:1.2rem; justify-content:center; margin-bottom:1rem; }
+    footer .socials svg { width:28px; height:28px; fill:var(--aqua); }
+    .hidden { opacity:0; transform:translateY(30px); transition:opacity 0.8s ease, transform 0.8s ease; }
+    .hidden.visible { opacity:1; transform:translateY(0); }
+    .cta-final { background:linear-gradient(145deg,#08182F,#0F2E4C); color:var(--soft-gray); text-align:center; }
+    .cta-final .card { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.2); color:var(--white); display:inline-block; max-width:760px; }
+    .cta-button { display:inline-flex; align-items:center; justify-content:center; padding:0.9rem 2.4rem; border-radius:999px; background:var(--aqua); color:var(--navy); font-weight:600; text-decoration:none; box-shadow:0 20px 45px rgba(17,218,199,0.35); margin-top:1.2rem; }
+    .collapsible { margin-top:2rem; }
+    .collapsible-header { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.5rem; border-radius:16px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); cursor:pointer; }
+    .collapsible-content { overflow:hidden; max-height:0; transition:max-height 0.4s ease; }
+    .collapsible-content.open { max-height:4000px; }
+    .collapsible-arrow { transition:transform 0.3s ease; color:var(--aqua); }
+    .collapsible-arrow.open { transform:rotate(180deg); }
+    @media(max-width:960px){
+      .timeline-card, .timeline-card:nth-child(even), .timeline-card:nth-child(odd) { width:100%; float:none; margin-bottom:1.5rem; }
+      .timeline::before { left:20px; }
+      .timeline-card { padding-left:50px; }
+      .timeline-card::before { left:18px; right:auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-ring"></div>
+    <img src="https://www.51tocarbonzero.com/wp-content/uploads/51-2-0-logo-white.png.webp" alt="51toCarbonZero" class="loading-logo">
+    <div class="synergy-loader"><span></span><span></span><span></span></div>
+  </div>
+  <header class="header">
+    <div class="header-inner">
+      <img src="https://www.51tocarbonzero.com/wp-content/uploads/51-2-0-logo-white.png.webp" alt="51toCarbonZero">
+    </div>
+    <div class="accent-bar"></div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="badge">Sustainability & ROI</span>
+          <h1>A clear view of carbon, cost, and opportunity</h1>
+          <p>51toCarbonZero blends energy, emissions, digital workload, and cloud intelligence so you can steer change with confidence.</p>
+        </div>
+        <div class="hero-visual">
+          <div class="wind-field">
+            <svg class="wind-turbine" viewBox="0 0 200 200" style="position:absolute; top:10px; right:10px; width:260px;">
+              <circle cx="100" cy="170" r="6" fill="var(--aqua)" />
+              <rect x="96" y="90" width="8" height="80" fill="var(--soft-gray)" />
+              <polygon points="100,100 160,60 120,140" fill="rgba(255,255,255,0.85)" />
+              <polygon points="100,100 40,60 80,140" fill="rgba(255,255,255,0.65)" />
+              <polygon points="100,100 100,30 140,110" fill="rgba(255,255,255,0.4)" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="rolling-hills">
+        <div class='hill-layer hill1' style='z-index:0;'><svg viewBox='0 0 1440 320' preserveAspectRatio='none'><path fill='rgba(17,218,199,0.22)' d='M0,224L40,213.3C80,203,160,181,240,165.3C320,149,400,139,480,138.7C560,139,640,149,720,165.3C800,181,880,203,960,208C1040,213,1120,203,1200,181.3C1280,160,1360,128,1400,112L1440,96V320H0Z'></path></svg></div><div class='hill-layer hill2' style='z-index:1;'><svg viewBox='0 0 1440 320' preserveAspectRatio='none'><path fill='rgba(255,255,255,0.16)' d='M0,224L40,213.3C80,203,160,181,240,165.3C320,149,400,139,480,138.7C560,139,640,149,720,165.3C800,181,880,203,960,208C1040,213,1120,203,1200,181.3C1280,160,1360,128,1400,112L1440,96V320H0Z'></path></svg></div><div class='hill-layer hill3' style='z-index:2;'><svg viewBox='0 0 1440 320' preserveAspectRatio='none'><path fill='rgba(8,24,47,0.4)' d='M0,224L40,213.3C80,203,160,181,240,165.3C320,149,400,139,480,138.7C560,139,640,149,720,165.3C800,181,880,203,960,208C1040,213,1120,203,1200,181.3C1280,160,1360,128,1400,112L1440,96V320H0Z'></path></svg></div>
+      </div>
+      <div class="particles">
+        <span class='particle' style='top:5%; animation-delay:0s; animation-duration:20s;'></span><span class='particle' style='top:12%; animation-delay:1s; animation-duration:22s;'></span><span class='particle' style='top:20%; animation-delay:2s; animation-duration:24s;'></span><span class='particle' style='top:28%; animation-delay:3s; animation-duration:26s;'></span><span class='particle' style='top:36%; animation-delay:4s; animation-duration:28s;'></span><span class='particle' style='top:44%; animation-delay:5s; animation-duration:30s;'></span><span class='particle' style='top:52%; animation-delay:6s; animation-duration:32s;'></span><span class='particle' style='top:60%; animation-delay:7s; animation-duration:34s;'></span><span class='particle' style='top:68%; animation-delay:8s; animation-duration:36s;'></span>
+      </div>
+      <div class="leaf-field">
+        <span class='leaf' style='top:15%; animation-delay:0s;'></span><span class='leaf' style='top:25%; animation-delay:2.5s;'></span><span class='leaf' style='top:35%; animation-delay:5s;'></span><span class='leaf' style='top:45%; animation-delay:7.5s;'></span><span class='leaf' style='top:55%; animation-delay:10s;'></span><span class='leaf' style='top:65%; animation-delay:12.5s;'></span>
+      </div>
+    </section>
+    <section class="section theme-soft">
+      <div class="container hidden">
+        <span class="badge">Your Tailored Sustainability & ROI Overview</span>
+        <div class="card intro-card">
+          <div class="intro-grid">
+            <div class="intro-box">
+              <label>Recipient</label>
+              <span>{{personName}}</span>
+            </div>
+            <div class="intro-box">
+              <label>Company</label>
+              <span>{{companyName}}</span>
+            </div>
+            <div class="intro-box">
+              <label>Date</label>
+              <span>{{reportDate}}</span>
+            </div>
+          </div>
+          <p style="font-size:1.05rem; margin:0; color:rgba(255,255,255,0.9); text-align:left;">This tailored sustainability & ROI assessment has been prepared specifically for {{companyName}}. Based on your industry, operational scale, energy usage patterns, digital footprint indicators, and known sector averages, this report outlines how 51toCarbonZero can help {{companyName}} reduce emissions, cut waste, and unlock meaningful operational savings.</p>
+        </div>
+      </div>
+    </section>
+    <section id="executive-summary" class="section theme-dark">
+      <div class="container hidden">
+        <span class="badge">Executive Summary</span>
+        <h2>Your position in one view</h2>
+        <p class="section-subtitle">Use this page to brief leadership on exposure, upside, and timing.</p>
+        <div class="kpi-grid">
+          <div class="card">
+            <p class="metric-label">Total footprint</p>
+            <p class="metric-value"><span class="highlight">142k tCO₂e</span></p>
+            <p class="metric-description">Current load across scopes 1, 2, and 3.</p>
+          </div>
+          <div class="card">
+            <p class="metric-label">Reduction potential</p>
+            <p class="metric-value"><span class="highlight">41%</span></p>
+            <p class="metric-description">High-confidence abatement opportunities.</p>
+          </div>
+          <div class="card">
+            <p class="metric-label">Annual savings</p>
+            <p class="metric-value"><span class="highlight">£6.1M</span></p>
+            <p class="metric-description">Energy, digital, cloud, and team efficiency.</p>
+          </div>
+          <div class="card">
+            <p class="metric-label">Payback</p>
+            <p class="metric-value"><span class="highlight">8.4 months</span></p>
+            <p class="metric-description">Fast return versus platform investment.</p>
+          </div>
+          <div class="card">
+            <p class="metric-label">Five-year value</p>
+            <p class="metric-value"><span class="highlight">£33.6M</span></p>
+            <p class="metric-description">Compounded gains from verified reductions.</p>
+          </div>
+        </div>
+        <div class="split" style="margin-top:2.5rem;">
+          <div class="card">
+            <h3>What’s working today</h3>
+            <p>You already have the building blocks: executive backing, flexible energy sources, and supplier leverage across nine campuses.</p>
+            <ul class="icon-list">
+              <li>Leadership commitment to net-zero timelines.</li>
+              <li>Hybrid data centres using 44% renewable energy.</li>
+              <li>Supplier scale keeps buying power strong.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>What needs attention</h3>
+            <p>These gaps keep emissions and cost higher than necessary. Closing them unlocks the ROI on the next page.</p>
+            <ul class="icon-list">
+              <li>Electricity intensity above peer average.</li>
+              <li>Digital marketing and cloud programmes lack guardrails.</li>
+              <li>Supplier data remains patchy for Scope 3 assurance.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="section-divider"></div>
+    <section class="section theme-soft">
+      <div class="container hidden">
+        <span class="badge">Personal Snapshot</span>
+        <h2>Without us vs with us</h2>
+        <p class="section-subtitle">What happens if nothing changes versus the gains our clients see in year one.</p>
+        <div class="contrast-layout">
+          <div class="contrast-card without-card">
+            <h3>Without 51toCarbonZero</h3>
+            <p class="metric-label">Current trajectory</p>
+            <p class="metric-value"><span class="highlight">142k tCO₂e</span></p>
+            <p class="metric-description">Emissions stay flat and costs rise.</p>
+            <ul>
+              <li><span class="icon-dot" style="background:var(--rose);"></span><span><span class="highlight">£2.1M</span> per year lost to energy inefficiency.</span></li>
+              <li><span class="icon-dot" style="background:var(--rose);"></span><span><span class="highlight">£750k</span> in unmanaged digital & cloud waste.</span></li>
+              <li><span class="icon-dot" style="background:var(--rose);"></span><span>Compliance and customer questionnaires stay painful.</span></li>
+            </ul>
+          </div>
+          <div class="contrast-card with-card">
+            <h3>With 51toCarbonZero</h3>
+            <p class="metric-label">Reduction potential</p>
+            <p class="metric-value"><span class="highlight">58k tCO₂e</span></p>
+            <p class="metric-description">Targeted initiatives deliver measurable gains.</p>
+            <ul>
+              <li><span class="icon-dot" style="background:var(--aqua);"></span><span><span class="highlight">£6.1M</span> combined savings fuel future investment.</span></li>
+              <li><span class="icon-dot" style="background:var(--aqua);"></span><span><span class="highlight">5,000+</span> hours freed for change programmes.</span></li>
+              <li><span class="icon-dot" style="background:var(--aqua);"></span><span>Instant, credible proof for regulators and customers.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="section-divider dark"></div>
+    <section class="section theme-soft" id="insights-tabs">
+      <div class="container hidden">
+        <span class="badge">Where we looked</span>
+        <h2>What this snapshot is built on</h2>
+        <p class="section-subtitle">Tap through the areas we reviewed so you can see why the opportunity exists.</p>
+        <div class="tab-wrapper">
+          <div class="tab-buttons">
+            <button type="button" class="tab-button active" data-tab="profile">Company</button>
+            <button type="button" class="tab-button" data-tab="carbon">Carbon & Energy</button>
+            <button type="button" class="tab-button" data-tab="digital">Digital & Cloud</button>
+          </div>
+          <div class="tab-panel active" id="tab-profile">
+            <div class="card">
+              <h3>Why it matters</h3>
+              <p>Scale, footprint, and market presence determine how fast you can pivot and where savings hide.</p>
+              <ul class="icon-list">
+                <li>Industry: advanced electronics with nine campuses.</li>
+                <li><span class="highlight">1,240</span> people, ~<span class="highlight">£480M</span> revenue, <span class="highlight">2.3M sq ft</span>.</li>
+                <li>Three hybrid data centres, active digital reach (<span class="highlight">~1.1M</span> visitors).</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Key indicators</h3>
+              <ul class="icon-list">
+                <li>Light commercial fleet keeps regional deliveries moving.</li>
+                <li>Cloud stack spread across AWS and Azure regions.</li>
+                <li>Paid media and CRM programmes run year-round.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="tab-panel" id="tab-carbon">
+            <div class="card">
+              <h3>Why it matters</h3>
+              <p>Carbon and energy intensity set the baseline for ROI. We focus on the levers that move the meter fastest.</p>
+              <ul class="icon-list">
+                <li>Scope 1: <span class="highlight">19,400 tCO₂e</span> (thermal plant, fleet, cooling).</li>
+                <li>Scope 2: <span class="highlight">8,760 tCO₂e</span> (<span class="highlight">31,870 MWh</span> at <span class="highlight">0.275 kg/kWh</span>).</li>
+                <li>Scope 3: <span class="highlight">114,000 tCO₂e</span> (suppliers, travel, digital operations).</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Signals spotted</h3>
+              <ul class="icon-list">
+                <li>Gas and heating oil still power legacy processes.</li>
+                <li>Refrigerant losses could add <span class="highlight">320 tCO₂e</span> without checks.</li>
+                <li>Supplier data gaps slow down Scope 3 credibility.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="tab-panel" id="tab-digital">
+            <div class="card">
+              <h3>Why it matters</h3>
+              <p>Digital and cloud choices now drive an outsized share of emissions and cost; they’re also the fastest to optimise.</p>
+              <ul class="icon-list">
+                <li>Pages average <span class="highlight">2.3MB</span> per view; video-heavy campaigns spike emissions.</li>
+                <li>CRM sends ~<span class="highlight">3.5M</span> emails per quarter.</li>
+                <li>Cloud mix: <span class="highlight">62% hyperscale</span>, <span class="highlight">38% sovereign</span>/on-prem.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Signals spotted</h3>
+              <ul class="icon-list">
+                <li>Quarterly AI training cycles consume ~<span class="highlight">1.4 GWh</span>.</li>
+                <li>Inference spans 11 markets with uneven renewable coverage.</li>
+                <li>Workload placement lacks carbon-aware scheduling.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="section-divider"></div>
+    
+    <div class="section-divider"></div>
+    <section class="section theme-gradient">
+      <div class="container hidden">
+        <span class="badge">Value Story</span>
+        <h2>What the shift delivers</h2>
+        <p class="section-subtitle">Every initiative ladders up to a clearer business outcome.</p>
+        <div class="split" style="gap:1.5rem;">
+          <div class="card">
+            <h3>What you gain</h3>
+            <ul class="icon-list">
+              <li><span class="highlight">£6.1M</span> annual savings from energy, digital, and cloud efficiency.</li>
+              <li>5,000+ hours freed by automating reporting.</li>
+              <li>Less time debating data, more time executing plans.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>What it unlocks</h3>
+            <ul class="icon-list">
+              <li>Proof for customers and regulators on day one.</li>
+              <li>Confidence to sign PPAs and supplier agreements faster.</li>
+              <li>Freedom to redirect capital toward growth projects.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="kpi-grid" style="margin-top:2.5rem;">
+          <div class="card">
+            <p class="metric-label">Annual benefit</p>
+            <p class="metric-value"><span class="highlight">£6.1M</span></p>
+            <p class="metric-description">Combined savings once the plan is in motion.</p>
+          </div>
+          <div class="card">
+            <p class="metric-label">Platform investment</p>
+            <p class="metric-value"><span class="highlight">£42k</span></p>
+            <p class="metric-description">Estimated annual 51toCarbonZero tier.</p>
+          </div>
+          <div class="card">
+            <p class="metric-label">Payback period</p>
+            <p class="metric-value"><span class="highlight">8.4 months</span></p>
+            <p class="metric-description">Value realised inside a single planning cycle.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="section-divider"></div>
+    <section class="section case-section">
+      <div class="container hidden">
+        <span class="badge">Case Studies</span>
+        <h2>Proof from fellow innovators</h2>
+        <p class="section-subtitle">These programmes mirror the journey ahead for {{companyName}}.</p>
+        <div class="case-carousel">
+          <article class="case-card">
+            <h3>Storio</h3>
+            <p class="headline">Global e-commerce leader trimmed its digital footprint.</p>
+            <p class="metric-label">Key result</p>
+            <p class="metric-value"><span class="highlight">25% ↓ digital</span></p>
+            <p class="metric-description">Cleaner code + media guardrails.</p>
+            <p class="quote">“The clarity on marketing waste changed how we brief every campaign.”</p>
+          </article>
+          <article class="case-card">
+            <h3>Samsung</h3>
+            <p class="headline">Manufacturing sites rebalanced energy demand.</p>
+            <p class="metric-label">Key result</p>
+            <p class="metric-value"><span class="highlight">£4.6M saved</span></p>
+            <p class="metric-description">PPA + efficiency stack.</p>
+            <p class="quote">“51toCarbonZero guided investments with board-ready visuals.”</p>
+          </article>
+          <article class="case-card">
+            <h3>OVO</h3>
+            <p class="headline">Customer platforms now run when grids are cleanest.</p>
+            <p class="metric-label">Key result</p>
+            <p class="metric-value"><span class="highlight">32% ↓ cloud</span></p>
+            <p class="metric-description">Carbon-aware scheduling.</p>
+            <p class="quote">“We gained real-time trust in every data point presented to regulators.”</p>
+          </article>
+          <article class="case-card">
+            <h3>Costa</h3>
+            <p class="headline">Retail playbooks keep every store efficient and on-message.</p>
+            <p class="metric-label">Key result</p>
+            <p class="metric-value"><span class="highlight">18% ↓ energy</span></p>
+            <p class="metric-description">Low-energy retrofits.</p>
+            <p class="quote">“Simple dashboards kept every franchisee accountable.”</p>
+          </article>
+        </div>
+      </div>
+    </section>
+    <div class="section-divider dark"></div>
+    <section class="section testimonial-section">
+      <div class="container hidden">
+        <span class="badge">Testimonials</span>
+        <h2>Leaders trust the journey</h2>
+        <p class="section-subtitle">A few voices from teams already using 51toCarbonZero.</p>
+        <div class="testimonial-carousel">
+          <article class="testimonial-card">
+            <div class="metric-label">Storio</div>
+            <p>“51toCarbonZero let us talk about carbon, cost, and innovation in the same breath.”</p>
+            <p class="metric-description">Emma Patel — Chief Sustainability Officer</p>
+          </article>
+          <article class="testimonial-card">
+            <div class="metric-label">Costa</div>
+            <p>“Our board finally sees sustainability as a profit lever, not just a report.”</p>
+            <p class="metric-description">Jason Reed — VP Finance</p>
+          </article>
+          <article class="testimonial-card">
+            <div class="metric-label">OVO</div>
+            <p>“We can evidence impact to regulators and customers within minutes.”</p>
+            <p class="metric-description">Daniel Webb — COO</p>
+          </article>
+        </div>
+      </div>
+    </section>
+    <div class="section-divider"></div>
+    <section class="section theme-light">
+      <div class="container hidden">
+        <span class="badge">Risk & Readiness</span>
+        <h2>Why timing matters</h2>
+        <p class="section-subtitle">Regulators, insurers, and partners are moving fast. Getting ahead keeps the story positive.</p>
+        <div class="split">
+          <div class="card">
+            <h3>Pressure building</h3>
+            <ul class="icon-list">
+              <li>CSRD, SECR, and SEC climate rules tighten from 2025.</li>
+              <li>Insurance premiums already reward verified reductions.</li>
+              <li>Customers expect supplier transparency every tender.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Peers are moving</h3>
+            <ul class="icon-list">
+              <li>Industry average sits at <span class="highlight">11.4 tCO₂e</span> per employee.</li>
+              <li><span class="highlight">64%</span> already operate a carbon intelligence platform.</li>
+              <li><span class="highlight">32%</span> have SBTi commitments underway.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="section-divider"></div>
+    <section class="section theme-gradient">
+      <div class="container hidden">
+        <span class="badge">Roadmap</span>
+        <h2>How we keep momentum</h2>
+        <p class="section-subtitle">Each phase builds on the last so {{companyName}} keeps seeing wins.</p>
+        <div class="timeline">
+          <div class="timeline-card">
+            <div class="timeline-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#0A3C34" stroke-width="1.5"><path d="M5 12h14M5 12l4 4M5 12l4-4"/></svg>
+            </div>
+            <h3><span class="highlight">0–30 Days</span>: Quick wins</h3>
+            <ul style="list-style:none; margin:0; padding:0;">
+              <li>Run energy & digital diagnostics at priority sites.</li>
+              <li>Launch KPI cockpit so leaders see daily progress.</li>
+              <li>Equip teams with focused playbooks.</li>
+            </ul>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#0A3C34" stroke-width="1.5"><circle cx="12" cy="12" r="7"/><path d="M12 9v3l2 2"/></svg>
+            </div>
+            <h3><span class="highlight">3 Months</span>: Phase 1</h3>
+            <ul style="list-style:none; margin:0; padding:0;">
+              <li>Shortlist PPAs and publish supplier scorecards.</li>
+              <li>Execute cloud & AI optimisation plan.</li>
+              <li>Refresh marketing and CRM workflows.</li>
+            </ul>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#0A3C34" stroke-width="1.5"><path d="M5 6h14v12H5z"/><path d="M9 10l2 2-2 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3><span class="highlight">12 Months</span>: Scale</h3>
+            <ul style="list-style:none; margin:0; padding:0;">
+              <li>Autonomous reporting with third-party assurance.</li>
+              <li>Scope 3 partner programme running end-to-end.</li>
+              <li>Fleet and site electrification scaled.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="section-divider dark"></div>
+    <section class="section cta-final">
+      <div class="container hidden">
+        <div class="card">
+          <span class="badge">Next step</span>
+          <h2>Ready to turn this into a plan for {{companyName}}?</h2>
+          <p class="section-subtitle">If you’d like to walk through this assessment or translate it into a concrete roadmap for {{companyName}}, our team would be happy to help.</p>
+          <a class="cta-button" href="https://www.51tocarbonzero.com/get-in-touch-with-51-to-carbon-zero/" target="_blank" rel="noopener">Book a call with us</a>
+        </div>
+      </div>
+    </section>
+    <section id="assumptions" class="section theme-dark">
+      <div class="container hidden">
+        <span class="badge">Assumptions & Sources</span>
+        <h2>What underpins this view</h2>
+        <p class="section-subtitle">We combine disclosed company information with trusted market data. The tables below summarise what was assumed and where it came from. Click the bar to expand or collapse the full appendix table.</p>
+        <div class="collapsible">
+          <div class="collapsible-header">
+            <strong>Appendix – Click to Expand / Collapse</strong>
+            <span class="collapsible-arrow">&#9660;</span>
+          </div>
+          <div class="collapsible-content">
+            <div class="card" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15);">
+              <table>
+                <thead>
+                  <tr><th>Variable</th><th>Value Used</th><th>Source</th><th>Notes / Reasoning</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Scope 1 emissions</td><td><span class="highlight">19,400 tCO₂e</span></td><td>Utility invoices FY23</td><td>Thermal plant, fleet, critical cooling.</td></tr>
+                  <tr><td>Scope 2 emissions</td><td><span class="highlight">8,760 tCO₂e</span></td><td>Utility invoices FY23</td><td><span class="highlight">31,870 MWh</span> at <span class="highlight">0.275 kg/kWh</span>.</td></tr>
+                  <tr><td>Scope 3 emissions</td><td><span class="highlight">114,000 tCO₂e</span></td><td>Industry average + supplier spend</td><td>Supplier goods, travel, cloud services.</td></tr>
+                  <tr><td>Grid intensity</td><td><span class="highlight">0.275 kg/kWh</span></td><td>UK Gov GHG factors</td><td>Applied to market-based electricity.</td></tr>
+                  <tr><td>Carbon price (UK/EU)</td><td><span class="highlight">£60–£90/t</span></td><td>IEA / EU ETS</td><td>Used for avoidance calculations.</td></tr>
+                  <tr><td>Energy tariff</td><td><span class="highlight">£0.19/kWh</span></td><td>Ofgem commercial averages</td><td>Benchmark for UK manufacturing.</td></tr>
+                  <tr><td>Cloud mix</td><td>62% hyperscale / 38% sovereign</td><td>Engineering interviews</td><td>Used for cloud emission modelling.</td></tr>
+                  <tr><td>AI training load</td><td><span class="highlight">1.4 GWh</span> per cycle</td><td>Product roadmaps</td><td>Quarterly large-model training cadence.</td></tr>
+                  <tr><td>Website visitors</td><td><span class="highlight">~1.1M / month</span></td><td>Similarweb + SEO benchmarks</td><td>Inputs for digital footprint.</td></tr>
+                  <tr><td>Avg. page weight</td><td><span class="highlight">2.3 MB</span></td><td>WebsiteCarbon.com scan</td><td>Used for web emissions estimation.</td></tr>
+                  <tr><td>Digital ads mix</td><td>60% video / 40% static</td><td>Media team exports</td><td>Impacts Scope3 ad emissions.</td></tr>
+                  <tr><td>Email volume</td><td><span class="highlight">3.5M</span> / quarter</td><td>CRM platform reports</td><td>Used for communications footprint.</td></tr>
+                  <tr><td>Procurement spend model</td><td>Revenue × 0.62</td><td>Industry benchmark</td><td>Applied to supplier emissions estimate.</td></tr>
+                  <tr><td>Fleet fuel use</td><td>Light commercial baseline</td><td>Vehicle count × mpg</td><td>Assumed due to limited telematics.</td></tr>
+                  <tr><td>Platform investment</td><td><span class="highlight">£42k / year</span></td><td>51toCarbonZero pricing</td><td>Mid-market tier aligned to team size.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); margin-top:2rem;">
+              <table>
+                <thead>
+                  <tr><th>Source name</th><th>Data type</th><th>Used for</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Utility invoices FY23</td><td>Actual</td><td>Scope 1 & 2 energy intensity.</td></tr>
+                  <tr><td>IoT telemetry (flagship sites)</td><td>Actual</td><td>Operational baselines.</td></tr>
+                  <tr><td>Similarweb + SEO signals</td><td>Benchmark</td><td>Digital reach & page weight inputs.</td></tr>
+                  <tr><td>Scope3 dataset</td><td>Benchmark</td><td>Marketing & programmatic emissions.</td></tr>
+                  <tr><td>WebsiteCarbon.com scans</td><td>Public dataset</td><td>Page weight assumptions.</td></tr>
+                  <tr><td>Gartner / S&P cloud reports</td><td>Benchmark</td><td>Cloud spend & provider mix.</td></tr>
+                  <tr><td>IEA + UK Gov GHG factors</td><td>Gov dataset</td><td>Grid intensity & carbon pricing.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <img src="https://www.51tocarbonzero.com/wp-content/uploads/51-2-0-logo-white.png.webp" alt="51toCarbonZero">
+    <p>Prepared for leadership — © 2025 51toCarbonZero</p>
+    <div class="socials">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 2l10 10-10 10L2 12z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M18 2h-6l-4 6v16h10z"/></svg>
+    </div>
+    <small>Ready when you are.</small>
+  </footer>
+  <script>
+    const loader=document.getElementById('loadingScreen');
+    window.addEventListener('load',()=>{
+      setTimeout(()=>loader.style.opacity=0,600);
+      setTimeout(()=>loader.style.display='none',1200);
+    });
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{ if(entry.isIntersecting) entry.target.classList.add('visible'); });
+    },{threshold:0.2});
+    document.querySelectorAll('.hidden').forEach(el=>observer.observe(el));
+    const tabButtons=document.querySelectorAll('.tab-button');
+    const tabPanels=document.querySelectorAll('.tab-panel');
+    tabButtons.forEach(button=>{
+      button.addEventListener('click',()=>{
+        const target=button.getAttribute('data-tab');
+        tabButtons.forEach(btn=>btn.classList.toggle('active', btn===button));
+        tabPanels.forEach(panel=>panel.classList.toggle('active', panel.id===`tab-${target}`));
+      });
+    });
+    const collapsibleHeader=document.querySelector('.collapsible-header');
+    if(collapsibleHeader){
+      const arrow=collapsibleHeader.querySelector('.collapsible-arrow');
+      const collapsibleContent=collapsibleHeader.nextElementSibling;
+      collapsibleHeader.addEventListener('click',()=>{
+        collapsibleContent.classList.toggle('open');
+        arrow.classList.toggle('open');
+      });
+    }
+  </script>
+</body>
+</html>
